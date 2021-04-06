@@ -87,8 +87,11 @@ export default class Main extends Component {
                     <Button color="inherit" onClick={this.handleClickOpen}>Post</Button>
                 </Toolbar>
             </AppBar>
+            <MuiAlert severity="error">
+                If change status not work immediately, try refresh the page</MuiAlert>
             <MuiAlert severity="info">
                 Double Click a row to view Description</MuiAlert>
+
             <Jobs rows={this.state.rows} refresh={this.refresh}></Jobs>
 
 
