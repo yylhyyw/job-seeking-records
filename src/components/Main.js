@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { AppBar, Toolbar, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 import Jobs from './Jobs'
 
 
@@ -7,53 +8,53 @@ export default class Main extends Component {
 
     state = {
         open: false,
-        refresh : false,
-        rows : []
+        refresh: false,
+        rows: [],
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getJobs()
     }
 
     postNewJob = () => {
         const data = {
-            company : this.state.companyName,
-            jobTitle : this.state.jobTitle,
-            description : this.state.description,
-            date : this.state.date
+            company: this.state.companyName,
+            jobTitle: this.state.jobTitle,
+            description: this.state.description,
+            date: this.state.date
         }
         fetch("http://localhost:3000/jobs", {
-            method : 'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         }).then(response => response.json())
-        .then(data => {
-          console.log('Success:', data)
-          this.getJobs()
-          this.handleClose()
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+            .then(data => {
+                console.log('Success:', data)
+                this.getJobs()
+                this.handleClose()
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
 
     getJobs = () => {
         fetch("http://localhost:3000/jobs")
-        .then(res => res.json())
-        .then(
-            (result) => {
-                this.setState({
-                    rows: result
-                })
-            },
-            (error) => {
-                console.log(error)
-            }
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        rows: result
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                }
 
-        )
+            )
     }
 
 
@@ -66,9 +67,15 @@ export default class Main extends Component {
     handleClose = () => {
         this.setState({
             open: false,
-            refresh : true,
+            refresh: true,
         })
     }
+
+    refresh = () => {
+        this.getJobs()
+        console.log('refresh called ')
+    }
+
 
     render() {
         return (<div>
@@ -80,7 +87,13 @@ export default class Main extends Component {
                     <Button color="inherit" onClick={this.handleClickOpen}>Post</Button>
                 </Toolbar>
             </AppBar>
-            <Jobs rows={this.state.rows}></Jobs>
+            <MuiAlert severity="info">
+                Double Click a row to view Description</MuiAlert>
+            <Jobs rows={this.state.rows} refresh={this.refresh}></Jobs>
+
+
+
+            {/* Dialog to add jobs */}
             <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">New Record</DialogTitle>
                 <DialogContent>
@@ -93,9 +106,9 @@ export default class Main extends Component {
                         id="companyName"
                         label="Company Name"
                         type="text"
-                        onChange = {(e) => {
+                        onChange={(e) => {
                             this.setState({
-                                "companyName" : e.target.value
+                                "companyName": e.target.value
                             })
                         }}
                         fullWidth
@@ -106,9 +119,9 @@ export default class Main extends Component {
                         id="jobTitle"
                         label="Job Title"
                         type="text"
-                        onChange = {(e) => {
+                        onChange={(e) => {
                             this.setState({
-                                "jobTitle" : e.target.value
+                                "jobTitle": e.target.value
                             })
                         }}
                         fullWidth
@@ -122,9 +135,9 @@ export default class Main extends Component {
                         fullWidth
                         rows={4}
                         multiline
-                        onChange = {(e) => {
+                        onChange={(e) => {
                             this.setState({
-                                "description" : e.target.value
+                                "description": e.target.value
                             })
                         }}
                     />
@@ -134,9 +147,9 @@ export default class Main extends Component {
                         id="date"
                         type="date"
                         fullWidth
-                        onChange = {(e) => {
+                        onChange={(e) => {
                             this.setState({
-                                date : e.target.value
+                                date: e.target.value
                             })
                         }}
                     />
