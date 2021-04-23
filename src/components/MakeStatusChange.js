@@ -40,84 +40,121 @@ export default class MakeStatusChange extends Component {
     // case 6:Set Set to Rejected
 
     update(type, selectedRows) {
-        selectedRows.forEach(row => {
-            switch (type) {
-                case 0:
-                    row.status = 'Applied'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 1:
-                    row.status = 'OA stage'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 2:
-                    row.status = 'HR Interview'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 3:
-                    row.status = 'code 1st stage'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 4:
-                    row.status = 'code 2nd stage'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 5:
-                    row.status = 'code 3rd stage'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                case 6:
-                    row.status = 'Rejected'
-                    fetch("http://localhost:3000/jobs/" + row.id, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(row),
-                    }).then(response => response.json())
-                    break
-                default:
-                    break
-            }
-        })
+        if (selectedRows.length === 0) {
+            alert('Need Select one!')
+            return
+        }
+        let requests = selectedRows.map((row) => {
+            return new Promise((res, rej) => {
+                switch (type) {
+                    case 0:
+                        row.status = 'Applied'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json())
+                            .then(() => {
+                                // console.log('Applied' + row.id)
+                                res()
+                            })
+                        break
+                    case 1:
+                        row.status = 'OA stage'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json())
+                            .then(() => {
+                                // console.log('OA stage' + row.id)
+                                res()
+                            })
+                        break
+                    case 2:
+                        row.status = 'HR Interview'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json())
+                            .then(() => {
+                                // console.log('HR Interview' + row.id)
+                                res()
+                            })
+                        break
+                    case 3:
+                        row.status = 'code 1st stage'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json())
+                            .then(() => {
+                                // console.log('code 1st stage' + row.id)
+                                res()
+                            })
+                        break
+                    case 4:
+                        row.status = 'code 2nd stage'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json())
+                            .then(() => {
+                                // console.log('code 2nd stage' + row.id)
+                                res()
+                            })
+                        break
+                    case 5:
+                        row.status = 'code 3rd stage'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json()).then(() => {
+                            // console.log('code 3rd stage' + row.id)
+                            res()
+                        })
+                        break
+                    case 6:
+                        row.status = 'Rejected'
+                        fetch("http://localhost:3000/jobs/" + row.id, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(row),
+                        }).then(response => response.json()).then(() => {
+                            // console.log('Rejected' + row.id)
+                            res()
+                        })
+                        break
 
-        setTimeout(this.props.refresh, 5)
+                    default:
+                        rej()
+                        break
+                }
+            })
+
+        })
+        Promise.all(requests).then(() => {
+            this.props.refresh()
+        })
+        // setTimeout(()=>this.props.refresh(), 0)
 
     }
 

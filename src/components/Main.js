@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
-import { AppBar, Toolbar, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert';
+import MenuIcon from '@material-ui/icons/Menu';
 import Jobs from './Jobs'
+import Menu from './Menu'
+import Generator from './Generator1';
+import Items from './Items';
+import Setting from './Setting'
 
 
 export default class Main extends Component {
 
     state = {
         open: false,
-        refresh: false,
         rows: [],
+        currentPanel: 'jobBoard',
+        menuHidden: true,
     }
 
     componentDidMount() {
@@ -57,6 +63,11 @@ export default class Main extends Component {
             )
     }
 
+    switchPanel = (name) => {
+        this.setState({
+            currentPanel: name
+        })
+    }
 
     handleClickOpen = () => {
         this.setState({
@@ -66,33 +77,54 @@ export default class Main extends Component {
 
     handleClose = () => {
         this.setState({
-            open: false,
-            refresh: true,
+            open: false
         })
+    }
+
+    MenuAction = () => {
+        if (this.state.menuHidden === false) {
+            this.setState({
+                menuHidden: true
+            })
+        } else {
+            this.setState({
+                menuHidden: false
+            })
+        }
     }
 
     refresh = () => {
         this.getJobs()
-        console.log('refresh called ')
     }
 
 
     render() {
         return (<div>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6">
-                        Job Applied
-                    </Typography>
-                    <Button color="inherit" onClick={this.handleClickOpen}>Post</Button>
-                </Toolbar>
-            </AppBar>
-            <MuiAlert severity="error">
-                If change status not work immediately, try refresh the page</MuiAlert>
-            <MuiAlert severity="info">
-                Double Click a row to view Description</MuiAlert>
+            <div id="main-body">
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.MenuAction}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6">
+                            Job Applied
+                        </Typography>
 
-            <Jobs rows={this.state.rows} refresh={this.refresh}></Jobs>
+                    </Toolbar>
+                </AppBar>
+                <MuiAlert severity="error">
+                    If change status not work immediately, try refresh the page (It looks like JSON-SERVER can't handle a lot of request at one time.)</MuiAlert>
+                <MuiAlert severity="info">
+                    Double Click a row to view Description</MuiAlert>
+                {this.state.currentPanel === 'jobBoard' ? <Jobs rows={this.state.rows} refresh={this.refresh}></Jobs> : null}
+                {this.state.currentPanel === 'generator' ? <Generator /> : null}
+                {this.state.currentPanel === 'items' ? <Items /> : null}
+                {this.state.currentPanel === 'setting' ? <Setting /> : null}
+            </div>
+
+            {this.state.menuHidden ? null : <Menu switch={this.switchPanel} close={this.MenuAction} post={this.handleClickOpen} />}
+
+
 
 
 

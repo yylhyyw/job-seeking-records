@@ -13,8 +13,8 @@ const columns = [
     { field: 'id', headerName: 'ID', flex: 0.035, },
     { field: 'company', headerName: 'Company', flex: 0.1, },
     { field: 'jobTitle', headerName: 'Job Title', flex: 0.16, },
-    { field: 'description', headerName: 'Description', flex: 0.52, },
-    { field: 'date', headerName: 'Apply Date', flex: 0.08, },
+    { field: 'description', headerName: 'Description', flex: 0.52, cellClassName : "description-style"},
+    { field: 'date', headerName: 'Apply Date', flex: 0.08,},
     {
         field: 'status', headerName: 'Status', flex: 0.08, cellClassName: (params) => {
             return params.value === 'Rejected' ? 'reject-status-color' : 'status-color'
@@ -47,7 +47,6 @@ export default class Jobs extends Component {
     }
 
     onDoubleClick = (e) => {
-        console.log(e)
         this.setState({
             open: true,
             selectedDescription: e.row.description,
@@ -57,7 +56,7 @@ export default class Jobs extends Component {
     }
 
     refresh = () => {
-        setTimeout(this.props.refresh, 5)
+        this.props.refresh()
     }
 
     open = () => {
@@ -73,16 +72,15 @@ export default class Jobs extends Component {
     }
 
     render() {
-        return (<div style={{ height: 400, width: '100%' }}>
+        return (<div style={{ height: 400, width: '100%'}}>
             <DataGrid rows={this.props.rows} columns={columns} pageSize={10} checkboxSelection autoHeight onRowSelected={this.onSelect} onRowDoubleClick={this.onDoubleClick} components={{
                 Toolbar: GridToolbar,
             }} />
             <MakeStatusChange selectedRows={this.state.selectedRows} refresh={this.refresh} />
 
-
             {/* dialog */}
             <Dialog open={this.state.open} onClose={this.handleClose} >
-                <div style={{ margin: '10px' }}>
+                <div style={{ margin: '10px', whiteSpace: 'pre-line'}}>
                     <h3>Description</h3>
                     <h4>Company -- {this.state.selectedLabel}</h4>
                     <h4>Position -- {this.state.selectedRole}</h4>
