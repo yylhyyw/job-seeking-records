@@ -1,66 +1,63 @@
 import React, { Component } from 'react'
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Parse from './generator-tools/Parse'
+import Select from './generator-tools/Select'
 import { Button } from '@material-ui/core'
 
 export default class Generator extends Component {
 
     state = {
-        keyWords : ['java', 'python'],
-        description : '',
-        findKeys : null
+        finishedSteps: new Set(),
+        activeStep: 0,
+        findKeySet: null
     }
 
+    steps = ['Scan key words', 'Select key words', 'Generated Resume']
 
-    style = {
-        position : 'relative',
-        left : '0',
-        right : '0',
-        width : '100%',
-        top:'0',
-        height : '50%',
+    checkSteps = (index) => {
+        return this.state.finishedSteps.has(index)
     }
 
-    parse = () => {
-        let body = this.state.description
-        const set = this.state.keyWords
-        body = body.replaceAll(/\n/g, " ")
-        const arr = body.split(' ')
-        const keyWords = new Set()
-        arr.forEach( (s) => {
-            let word = s.toLowerCase()
-            set.forEach( key => {
-                if(word.includes(key)) keyWords.add(key)
-            })
-        })
+    handleNext = (index, data) => {
+        switch(index) {
+            case 0:
+                this.setState({
+                    findKeySet : data
+                })
+              break;
+            case 1:
+                this.setState({
+                    findKeySet : data
+                })
+              break;
+            default:
+          }
         this.setState({
-            findKeys : keyWords
+            activeStep: this.state.activeStep + 1
         })
     }
 
-    renderList = () => {
-        if(this.state.findKeys === null) return null;
-        const listItems = []
-        this.state.findKeys.forEach( x => {
-            let time = new Date().getTime
-            listItems.push(<li key={time}>{x}</li>)
-        })
-
-        return <ul>
-            {listItems}
-        </ul>
-    }
     render() {
         return (
-            <div style={{position : 'absolute', left : '10%', right : '10%'}}>
-                <h3>Please Import Your Job Description Here:</h3>
-                <div style={this.style}>
-                    <textarea style={{width : '100%', height:'500px'}}name="Description" id="description" onChange={(e) => this.setState({
-                        description : e.target.value
-                    })}></textarea>
-                </div>
+            <div style={{ position: 'absolute', left: '10%', right: '10%' }}>
+                <Stepper activeStep={this.state.activeStep}>
+                    {this.steps.map((label, index) => {
+                        const stepProps = {};
+                        const labelProps = {};
+                        return (
+                            <Step key={label} {...stepProps}>
+                                <StepLabel {...labelProps}>{label}</StepLabel>
+                            </Step>
+                        );
+                    })}
+                </Stepper>
                 <div>
-                <Button style={{marginTop : "20px"}}color="secondary" variant="contained" onClick={this.parse}>Analyze</Button>
+                    {this.state.activeStep === 0 ? <Parse next = {this.handleNext}/> : null}
+                    {this.state.activeStep === 1 ? <Select keySet = {this.state.findKeySet} next = {this.handleNext}/> : null}
                 </div>
-                {this.renderList()}
+
             </div>
         )
     }

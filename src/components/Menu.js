@@ -16,15 +16,22 @@ export default class Menu extends Component {
     }
 
     componentDidMount() {
-        const animTimer = setInterval(this.anim, 60)
+        const animTimer = setInterval(this.anim, 10)
         this.setState({
             animTimer: animTimer
         })
+
+        
+    }
+
+    componentWillUnmount() {
+        document.body.removeEventListener('click', this.props.close)
     }
 
     anim = () => {
-        const count = this.state.timeCount + 48;
+        const count = this.state.timeCount + 10;
         if (count >= 0) {
+            document.body.addEventListener('click', this.props.close)
             this.setState({
                 timeCount: 0,
                 menuStyle: {
@@ -51,11 +58,11 @@ export default class Menu extends Component {
 
     }
     render() {
-        console.log(this)
+
         return (
             
             <div >
-                <ButtonGroup id="menu" style={this.state.menuStyle}
+                <ButtonGroup style={this.state.menuStyle}
                     orientation="vertical"
                     color="primary"
                     aria-label="Menu Button Gourp"

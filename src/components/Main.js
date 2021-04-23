@@ -4,7 +4,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import MenuIcon from '@material-ui/icons/Menu';
 import Jobs from './Jobs'
 import Menu from './Menu'
-import Generator from './Generator1';
+import Generator from './Generator';
 import Items from './Items';
 import Setting from './Setting'
 
@@ -15,7 +15,7 @@ export default class Main extends Component {
         open: false,
         rows: [],
         currentPanel: 'jobBoard',
-        menuHidden: true,
+        menuHidden: true
     }
 
     componentDidMount() {
@@ -82,13 +82,13 @@ export default class Main extends Component {
     }
 
     MenuAction = () => {
-        if (this.state.menuHidden === false) {
+        if (this.state.menuHidden) {
             this.setState({
-                menuHidden: true
+                menuHidden: false
             })
         } else {
             this.setState({
-                menuHidden: false
+                menuHidden: true
             })
         }
     }
@@ -103,9 +103,12 @@ export default class Main extends Component {
             <div id="main-body">
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.MenuAction}>
-                            <MenuIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton id="menu" edge="start" color="inherit" aria-label="menu" onClick={this.MenuAction}>
+                                <MenuIcon />
+                            </IconButton>
+                        </div>
+
                         <Typography variant="h6">
                             Job Applied
                         </Typography>
