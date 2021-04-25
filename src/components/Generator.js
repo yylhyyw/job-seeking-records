@@ -57,7 +57,6 @@ export default class Generator extends Component {
                     {this.state.activeStep === 0 ? <Parse next = {this.handleNext}/> : null}
                     {this.state.activeStep === 1 ? <Select keySet = {this.state.findKeySet} next = {this.handleNext}/> : null}
                 </div>
-
             </div>
         )
     }
